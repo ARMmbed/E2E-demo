@@ -1,6 +1,6 @@
- import os
- import tdclient
- import logging
+import os
+import tdclient
+import logging
 
 # configure logging level. 
 logging.basicConfig(level=logging.DEBUG)
@@ -8,8 +8,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 # # Treasure Data Information
 # apikey = "10389/599f0416d91cfba4fe1d950e3497e01be258efec" 
-# database = "device_health"
-# query = "select AVG( cast(total_size as double)) FROM heap_info"
+# database = "test_database"
+# query = "select AVG( cast(test_table as double)) FROM test_database"
 
 ################################
 # # Step 2 - Get info from Treasure Data 
@@ -51,13 +51,18 @@ logging.basicConfig(level=logging.DEBUG)
 
 import subprocess
 
+# CHANGE THESE
+mbed_cloud_api_key = "CHANGE THIS"
+mbed_cloud_device_id = "CHANGE THIS"
+
 mbedos_repo="https://www.github.com/BlackstoneEngineering/mbed-os-example-e2e-demo"
 mbedos_repo_projectname = mbedos_repo.split("/")[-1]
 logging.debug("project name detected as "+mbedos_repo_projectname)
 target = "DISCO_L475VG_IOT01A"
 algo_name = "ALGO" # this corresponds to the #define in the main.cpp file
-mbed_cloud_api_key = "CHANGE THIS"
-mbed_cloud_device_id = "CHANGE THIS"
+
+if mbed_cloud_api_key=="CHANGE THIS":
+	logging.info("***Hey, go modify test.py and chagne the mbed_cloud_api_key variable or this wont work!***")
 
 #Check that repo is downloaded
 if not os.isdir(mbedos_repo_projectname):
