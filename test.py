@@ -10,6 +10,11 @@ logging.basicConfig(level=logging.DEBUG)
 # apikey = "10389/599f0416d91cfba4fe1d950e3497e01be258efec" 
 # database = "test_database"
 # query = "select AVG( cast(test_table as double)) FROM test_database"
+# 
+# if apikey=="CHANGE THIS":
+# 	logging.info("***Hey, go modify test.py and change the apikey variable or this wont work!***")
+# 	logging.info("exiting script")
+# 	raise SystemExit
 
 ################################
 # # Step 2 - Get info from Treasure Data 
@@ -50,6 +55,7 @@ logging.basicConfig(level=logging.DEBUG)
 # build_repo(mbedUser,mbedPassword,repo,target,symbols)
 
 import subprocess
+import sys
 
 # CHANGE THESE
 mbed_cloud_api_key = "CHANGE THIS"
@@ -62,7 +68,9 @@ target = "DISCO_L475VG_IOT01A"
 algo_name = "ALGO" # this corresponds to the #define in the main.cpp file
 
 if mbed_cloud_api_key=="CHANGE THIS":
-	logging.info("***Hey, go modify test.py and chagne the mbed_cloud_api_key variable or this wont work!***")
+	logging.info("***Hey, go modify test.py and change the mbed_cloud_api_key variable or this wont work!***")
+	logging.info("exiting script")
+	raise SystemExit
 
 #Check that repo is downloaded
 if not os.isdir(mbedos_repo_projectname):
