@@ -3,15 +3,15 @@ import tdclient
 import logging
 
 # configure logging level. 
-logging.basicConfig(level=logging.DEBUG)
-# logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
+
+###############################
+# Step 1 - Run the initial compile of mbed-os example
+###############################
 
 # Treasure Data Information
-apikey = "CHANGE THIS" 
-# CHANGE THESE
-mbed_cloud_api_key = "CHANGE THIS"
-mbed_cloud_device_id = "CHANGE THIS"
-
+apikey = "10389/CHANGE THIS" 
 database = "test_database"
 query = "select AVG( cast(temp as double)) FROM test_table"
 
@@ -64,7 +64,9 @@ print("algo_value computed as "+str(algo_value))
 import subprocess
 import sys
 
-
+# CHANGE THESE
+mbed_cloud_api_key = "CHANGE THIS"
+mbed_cloud_device_id = "CHANGE THIS"
 
 print("\r\n\r\n***** Step 4 *******\r\n")
 mbedos_repo="https://www.github.com/BlackstoneEngineering/mbed-os-example-e2e-demo"
@@ -87,16 +89,24 @@ if not os.path.isdir(mbedos_repo_projectname):
 
 os.chdir(mbedos_repo_projectname) # change working directory to be inside mbedos repo
 
+# set Mbed CLoud API key into the environment
+logging.info("setting mbed cloud api key into the environment variables")
+os.environ["CLOUD_SDK_API_KEY"]=mbed_cloud_api_key
+check = subprocess.check_output(["mbed", "config", "CLOUD_SDK_API_KEY", mbed_cloud_api_key])
+
 # check if update certs are in the project.
 if not os.path.isdir(".update-certificates"):
 	# If no update certs, add them (only first time)
+	logging.info("No device certs found, adding now...")
 	check = subprocess.check_output(["mbed", "dm", "init", "-a", mbed_cloud_api_key, "-d", "\"http://os.mbed.com\"", "--model-name", "\"modelname\"", "-q", "--force"])
 	logging.debug("[Mbed Device Management]"+check)
 	logging.info("**** Hey, i just generated some new certificates, you will need to make sure to program the device with the new binary")
 	logging.info("**** But before you do that, go modify the mbed_app.json file with the wifi network name / password and the TD API key!")
+	raise SystemExit
 
 # Compile the program with algorightm added
 logging.info("Adding #define "+algo_name+"="+str(algo_value)+"to the binary")
+logging.info("Please wait while we compile the new binary (~5min on first compile, <30sec on compile 2nd+ compile)")
 check=subprocess.check_output(["mbed", "compile", "--target", target,"--toolchain", "GCC_ARM","-D"+algo_name+"="+str(algo_value)])
 logging.debug("[Mbed Compile]"+check)
 
@@ -104,16 +114,13 @@ logging.debug("[Mbed Compile]"+check)
 ################################
 # Step 5 - Send new binary to device via Pelion
 ################################
-print("\r\n\r\n***** Step 3 *******\r\n")
+print("\r\n\r\n***** Step 5 *******\r\n")
 
 if mbed_cloud_device_id=="CHANGE THIS":
-	logging.info("***Hey, go modify test.py and change the mbed_cloud_device_id variable (get it from Pelion Portal once device is connected)!***")
+	logging.info("***Hey you need to Copy / Paste the binary from +"+mbedos_repo_projectname+"/BUILD/<TARGET>/GCC_ARM/"+mbedos_repo_projectname+".bin. Wait for the board to flash and then connect to the Pelion Portal")
+	logging.info("Next you will need to modify test.py and change the mbed_cloud_device_id variable (get it from Pelion Portal once device is connected)!***")
 	logging.info("exiting script")
 	raise SystemExit
-# set Mbed CLoud API key into the environment
-logging.info("setting mbed cloud api key into the environment variables")
-os.environ["CLOUD_SDK_API_KEY"]=mbed_cloud_api_key
-check = subprocess.check_output(["mbed", "config", "CLOUD_SDK_API_KEY", mbed_cloud_api_key])
 
 # issue update
 logging.info("running update on device "+mbed_cloud_device_id)
