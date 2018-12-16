@@ -4,7 +4,12 @@
 import os
 import tdclient
 import logging
-import config
+import subprocess
+from config import *
+
+# configure logging level. 
+# logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 ################################
 # Step 2.0 - Check all config values are filled out

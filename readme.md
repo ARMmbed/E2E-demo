@@ -41,6 +41,9 @@ If you want to make a more custom algorithm (the default is just an average of a
 
 If you want to pass in multiple values (currently we are just sharing 1 thing, the average, in a macro called `ALGO`), you will need to create additional `#define MACRO VALUE` in the main.cpp file as well as pass them in in step 2.3 by adding additional `-DMACRO=VALUE` commands to the `mbed compile ..... -DMACRO1=VALUE1 -DMACRO2=VALUE2 -DMACRO3=VALUE3` command. 
 
+## Scheduled Updates
+At the moment there is no in-built functionality for scheduled updates. To acheive this i suggest setting up a cron job that runs the e2e.py script every hour or every 10min or whatever period of time you want. 
+
 ## Limitations
 - must be run on local machine connected to the internet. 
 - pain in the ass to use. 
@@ -56,4 +59,6 @@ If you want to pass in multiple values (currently we are just sharing 1 thing, t
 - increase scripting so user doesnt have to manually input all the variables
 - Add 'typename' to the endpoints so every endpoint gets updated by type instead of by individual device ID
 - Create single page website for this so its all GUI based instead of command line based. 
+- Move WIFI SSID / Password into #defines so user doesnt have to config them in mbed_app.json
+- Various enhancements to make this process faster (move algo to be defined globally so it doesnt recompile from scratch each time,...etc)
 
